@@ -5,8 +5,7 @@ Help to detail your pokemons with status with no client including calculate accu
 
 [![image]](http://bbs.ngacn.cc/read.php?tid=9632888)  
 [image]: https://github.com/hy418618674/PokemonsStatus/raw/master/PokemonsStatus/resource/logo.png"  
-[1.1]: https://github.com/hy418618674/PokemonsStatus/raw/master/PokemonsStatus/resource/logo.png
-[1.2]: http://img.ngacn.cc/attachments/mon_201607/27/epQhav-aivkZhT3cSsg-lc.png
+
 
 
 ##Features
