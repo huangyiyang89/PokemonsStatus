@@ -1,6 +1,7 @@
 ﻿using PokemonGo.RocketAPI;
 using PokemonGo.RocketAPI.Enums;
 using PokemonGo.RocketAPI.Login;
+using PokemonGo.RocketAPI.Rpc;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -18,6 +19,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+using POGOProtos.Networking.Responses;
+
 namespace PokemonsStatus
 {
     /// <summary>
@@ -27,8 +30,8 @@ namespace PokemonsStatus
     {
         static Client _client;
         static Settings _clientSettings = new Settings();
-        static Inventory _inventory;
         static DataTable t;
+        static Inventory _inventory;
         
         public MainWindow()
         {
@@ -52,10 +55,10 @@ namespace PokemonsStatus
             textBox_ptcpass.Text = Properties.Settings.Default.password;
             
         }
-
+        //ptc
         private async void button1_Copy_Click(object sender, RoutedEventArgs e)
         {
-            btnSignOut.IsEnabled = false;
+            
             btnGoogleLogin.IsEnabled = false;
             btnPtcLogin.IsEnabled = false;
             try
@@ -63,12 +66,10 @@ namespace PokemonsStatus
                 _clientSettings.AuthType = AuthType.Ptc;
                 _clientSettings.PtcUsername = textbox_ptcusername.Text;
                 _clientSettings.PtcPassword = textBox_ptcpass.Text;
-                _clientSettings.DefaultLatitude = 37.808586;
-                _clientSettings.DefaultLongitude = -122.409836;
+                //_clientSettings.DefaultLatitude = 37.808586;
+                //_clientSettings.DefaultLongitude = -122.409836;
                 _client = new Client(_clientSettings);
-                await _client.DoPtcLogin(_clientSettings.PtcUsername, _clientSettings.PtcPassword);
-                await _client.SetServer();
-                _inventory = new Inventory(_client);
+                await _client.Login.DoPtcLogin(_clientSettings.PtcUsername, _clientSettings.PtcPassword);
                 Bind();
             }
             catch(Exception ex)
@@ -77,29 +78,23 @@ namespace PokemonsStatus
             }
             btnGoogleLogin.IsEnabled =true;
             btnPtcLogin.IsEnabled = true;
-            btnSignOut.IsEnabled = true;
-
+           
         }
-
+        //google
         private async void button1_Click(object sender, RoutedEventArgs e)
         {
-            btnSignOut.IsEnabled = false;
             btnGoogleLogin.IsEnabled = false;
             btnPtcLogin.IsEnabled = false;
             try
             {
                 _clientSettings.AuthType = AuthType.Google;
-                _clientSettings.PtcUsername = textbox_ptcusername.Text;
-                _clientSettings.PtcPassword = textBox_ptcpass.Text;
-                
-                _clientSettings.DefaultLatitude = 37.808586;
-                _clientSettings.DefaultLongitude = -122.409836;
-
-                
+                _clientSettings.GoogleUsername= textbox_ptcusername.Text;
+                _clientSettings.GooglePassword= textBox_ptcpass.Text;
+                //_clientSettings.DefaultLatitude = 37.808586;
+                //_clientSettings.DefaultLongitude = -122.409836;
                 _client = new Client(_clientSettings);
-                await _client.DoGoogleLogin();
-                await _client.SetServer();
-                _inventory = new Inventory(_client);
+                await Task.Delay(100);
+                await _client.Login.DoGoogleLogin(_clientSettings.GoogleUsername, _clientSettings.GooglePassword);
                 Bind();
             }
             catch(Exception ex)
@@ -108,12 +103,13 @@ namespace PokemonsStatus
             }
             btnGoogleLogin.IsEnabled = true;
             btnPtcLogin.IsEnabled = true;
-            btnSignOut.IsEnabled = true;
+           
         }
 
         private async void Bind()
         {
             t.Clear();
+            _inventory = new Inventory(_client);
             var Pokemons = await _inventory.GetPokemons();
             foreach (var Pokemon in Pokemons)
             {
@@ -138,8 +134,6 @@ namespace PokemonsStatus
             
             dataGrid.ItemsSource = t.AsDataView();
            
-
-
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)

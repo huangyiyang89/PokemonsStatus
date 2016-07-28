@@ -1,14 +1,7 @@
-﻿#region
-
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using PokemonGo.RocketAPI.Helpers;
-
-#endregion
 
 namespace PokemonGo.RocketAPI.Login
 {
@@ -16,62 +9,33 @@ namespace PokemonGo.RocketAPI.Login
     {
         private const string OauthTokenEndpoint = "https://www.googleapis.com/oauth2/v4/token";
         private const string OauthEndpoint = "https://accounts.google.com/o/oauth2/device/code";
-        private const string ClientId = "115123608539-82psc02vs6v061njjivchf557lnimg2t.apps.googleusercontent.com";
-        private const string ClientSecret = "aTaio72-_s3PRyO5FdyU3tIJ";
+        private const string ClientId = "848232511240-7so421jotr2609rmqakceuu1luuq0ptb.apps.googleusercontent.com";// "848232511240-73ri3t7plvk96pj4f85uj8otdat2alem.apps.googleusercontent.com";
 
-        /// <summary>
-        ///     Gets the access token from Google
-        /// </summary>
-        /// <param name="deviceCode"></param>
-        /// <returns>tokenResponse</returns>
+        private const string ClientSecret = "NCjF1TLi2CcY6t5mt0ZveuL7";
+
+
         public static async Task<TokenResponseModel> GetAccessToken(DeviceCodeModel deviceCode)
         {
+            int count = 0;
+
             //Poll until user submitted code..
             TokenResponseModel tokenResponse;
             do
             {
                 await Task.Delay(2000);
                 tokenResponse = await PollSubmittedToken(deviceCode.device_code);
-            } while (tokenResponse.access_token == null || tokenResponse.refresh_token == null);
+                count++;
+            } while (tokenResponse.access_token == null || tokenResponse.refresh_token == null && count < 100);
 
             return tokenResponse;
-        }
-
-        public static async Task<TokenResponseModel> GetAccessToken(string refreshToken)
-        {
-            return await HttpClientHelper.PostFormEncodedAsync<TokenResponseModel>(OauthTokenEndpoint,
-                new KeyValuePair<string, string>("access_type", "offline"),
-                new KeyValuePair<string, string>("client_id", ClientId),
-                new KeyValuePair<string, string>("client_secret", ClientSecret),
-                new KeyValuePair<string, string>("refresh_token", refreshToken),
-                new KeyValuePair<string, string>("grant_type", "refresh_token"),
-                new KeyValuePair<string, string>("scope", "openid email https://www.googleapis.com/auth/userinfo.email"));
         }
 
         public static async Task<DeviceCodeModel> GetDeviceCode()
         {
             var deviceCode = await HttpClientHelper.PostFormEncodedAsync<DeviceCodeModel>(OauthEndpoint,
-            new KeyValuePair<string, string>("client_id", ClientId),
-            new KeyValuePair<string, string>("scope", "openid email https://www.googleapis.com/auth/userinfo.email"));
-            
-            try
-            {
-                
-                Thread.Sleep(2000);
-                MessageBox.Show("单击确定之后会自动打开google，验证码会复制到你的剪贴板。"+deviceCode.user_code);
-                Process.Start(@"https://www.google.com/device");
-                var thread = new Thread(() => Clipboard.SetText(deviceCode.user_code));
-                thread.SetApartmentState(ApartmentState.STA); 
-                thread.Start();
-                thread.Join();
-
-            }
-            catch (Exception)
-            {
-               
-            }
-            
-            return deviceCode;
+                new KeyValuePair<string, string>("client_id", ClientId),
+                new KeyValuePair<string, string>("scope", "openid email https://www.googleapis.com/auth/userinfo.email"));
+           return deviceCode;
         }
 
         private static async Task<TokenResponseModel> PollSubmittedToken(string deviceCode)
@@ -84,6 +48,16 @@ namespace PokemonGo.RocketAPI.Login
                 new KeyValuePair<string, string>("scope", "openid email https://www.googleapis.com/auth/userinfo.email"));
         }
 
+        public static async Task<TokenResponseModel> GetAccessToken(string refreshToken)
+        {
+            return await HttpClientHelper.PostFormEncodedAsync<TokenResponseModel>(OauthTokenEndpoint,
+                new KeyValuePair<string, string>("access_type", "offline"),
+                new KeyValuePair<string, string>("client_id", ClientId),
+                new KeyValuePair<string, string>("client_secret", ClientSecret),
+                new KeyValuePair<string, string>("refresh_token", refreshToken),
+                new KeyValuePair<string, string>("grant_type", "refresh_token"),
+                new KeyValuePair<string, string>("scope", "openid email https://www.googleapis.com/auth/userinfo.email"));
+        }
 
         internal class ErrorResponseModel
         {
@@ -99,7 +73,6 @@ namespace PokemonGo.RocketAPI.Login
             public string refresh_token { get; set; }
             public string id_token { get; set; }
         }
-
 
         public class DeviceCodeModel
         {

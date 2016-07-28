@@ -1,12 +1,9 @@
-#region
-
 using System;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-
-#endregion
 
 namespace PokemonGo.RocketAPI.Helpers
 {
@@ -33,11 +30,15 @@ namespace PokemonGo.RocketAPI.Helpers
 
                     return response;
                 }
-                catch
+                catch (Exception ex)
                 {
-                    
-                    if (i >= MaxRetries) throw;
-                    await Task.Delay(1000, cancellationToken);
+                    Debug.WriteLine($"[#{i} of {MaxRetries}] retry request {request.RequestUri} - Error: {ex}");
+                    if (i < MaxRetries)
+                    {
+                        await Task.Delay(1000, cancellationToken);
+                        continue;
+                    }
+                    throw;
                 }
             }
             return null;

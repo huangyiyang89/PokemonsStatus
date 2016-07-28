@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using PokemonGo.RocketAPI.Enums;
-using PokemonGo.RocketAPI.GeneratedCode;
+
 using System.Text.RegularExpressions;
 using PokemonGo.RocketAPI;
 
@@ -22,9 +22,11 @@ namespace PokemonsStatus
         private string ptcPassword;
         private double defaultLatitude;
         private double defaultLongitude;
-        public double DefaultAltitude => 10;
-       
-      
+        private double defaultAltitude;
+        private string googleUsername;
+        private string googlePassword;
+        
+
         public AuthType AuthType
         {
             get
@@ -90,6 +92,60 @@ namespace PokemonsStatus
             }
         }
 
+        
 
+        public string GoogleRefreshToken
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+      
+
+        public double DefaultAltitude
+        {
+            get
+            {
+                return defaultAltitude;
+            }
+
+            set
+            {
+                defaultAltitude = value;
+            }
+        }
+
+        public string GoogleUsername
+        {
+            get
+            {
+                return googleUsername;
+            }
+
+            set
+            {
+                googleUsername = value;
+            }
+        }
+
+        public string GooglePassword
+        {
+            get
+            {
+                return googlePassword;
+            }
+
+            set
+            {
+                googlePassword = value;
+            }
+        }
     }
 }

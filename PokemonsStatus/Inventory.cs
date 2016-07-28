@@ -6,8 +6,10 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using PokemonGo.RocketAPI.Enums;
-using PokemonGo.RocketAPI.GeneratedCode;
+
 using PokemonGo.RocketAPI;
+using POGOProtos.Data;
+using POGOProtos.Networking.Responses;
 
 #endregion
 
@@ -37,7 +39,7 @@ namespace PokemonsStatus
             try
             {
                 _lastRefresh = now;
-                _cachedInventory = await _client.GetInventory();
+                _cachedInventory = await _client.Inventory.GetInventory();
                 return _cachedInventory;
             }
             finally
@@ -50,7 +52,7 @@ namespace PokemonsStatus
         {
             var inventory = await GetCachedInventory();
             return
-                inventory.InventoryDelta.InventoryItems.Select(i => i.InventoryItemData?.Pokemon)
+                inventory.InventoryDelta.InventoryItems.Select(i => i.InventoryItemData?.PokemonData)
                     .Where(p => p != null && p.PokemonId > 0);
         }
 

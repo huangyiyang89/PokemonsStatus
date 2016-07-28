@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using PokemonGo.RocketAPI.GeneratedCode;
+
+using POGOProtos.Data;
+using POGOProtos.Enums;
 
 namespace PokemonGo.RocketAPI
 {
@@ -28,7 +30,7 @@ namespace PokemonGo.RocketAPI
         {
             if (poke.CpMultiplier + poke.AdditionalCpMultiplier == 0)
                 return (poke.IndividualAttack * 2 + poke.IndividualDefense + poke.IndividualStamina) / (4.0 * 15.0) * 100.0;
-
+            
             BaseStats baseStats = GetBaseStats(poke.PokemonId);
             var max_cp = CalculateMaxCPMultiplier(poke);
             var min_cp = CalculateMinCPMultiplier(poke);
