@@ -58,7 +58,7 @@ namespace PokemonGo.RocketAPI.Login
             {
                 
                 Thread.Sleep(2000);
-                Process.Start(@"http://www.google.com/device");
+                Process.Start(@"https://www.google.com/device");
                 var thread = new Thread(() => Clipboard.SetText(deviceCode.user_code));
                 thread.SetApartmentState(ApartmentState.STA); 
                 thread.Start();

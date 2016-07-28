@@ -25,8 +25,8 @@ namespace PokemonGo.RocketAPI.Helpers
                         Unknown13 = 14
                     }
                 },
-                Latitude = Utils.FloatAsUlong(lat),
-                Longitude = Utils.FloatAsUlong(lng),
+                //Latitude = Utils.FloatAsUlong(lat),
+               // Longitude = Utils.FloatAsUlong(lng),
                 RpcId = 1469378659230941192,
                 Unknown1 = 2,
                 Unknown12 = 989, 

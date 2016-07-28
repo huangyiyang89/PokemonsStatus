@@ -34,6 +34,8 @@ namespace PokemonsStatus
         {
             InitializeComponent();
             t = new DataTable();
+            t.Columns.Add("ID", typeof(int));
+            t.Columns.Add("CNName", typeof(string));
             t.Columns.Add("Pokemon", typeof(string));
             t.Columns.Add("CreationTime", typeof(DateTime));
             t.Columns.Add("LV", typeof(double));
@@ -89,6 +91,7 @@ namespace PokemonsStatus
                 _clientSettings.AuthType = AuthType.Google;
                 _clientSettings.PtcUsername = textbox_ptcusername.Text;
                 _clientSettings.PtcPassword = textBox_ptcpass.Text;
+                
                 _clientSettings.DefaultLatitude = 37.808586;
                 _clientSettings.DefaultLongitude = -122.409836;
 
@@ -115,13 +118,11 @@ namespace PokemonsStatus
             foreach (var Pokemon in Pokemons)
             {
                 DataRow newrow = t.NewRow();
-
+                newrow["ID"] = (int)Pokemon.PokemonId;
+                newrow["CNName"] = (PokemonNameCN)Pokemon.PokemonId;
                 newrow["Pokemon"] = Pokemon.PokemonId.ToString();
-
                 DateTime time = DateTime.MinValue;
                 DateTime startTime = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1, 0, 0, 0));
-              
-
                 newrow["CreationTime"] = startTime.AddMilliseconds(Pokemon.CreationTimeMs);
                 newrow["LV"] = PokemonInfo.GetLevel(Pokemon);
                 newrow["CP"] = Pokemon.Cp;
