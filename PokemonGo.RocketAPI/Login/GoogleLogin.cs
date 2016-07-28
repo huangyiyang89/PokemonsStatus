@@ -16,8 +16,8 @@ namespace PokemonGo.RocketAPI.Login
     {
         private const string OauthTokenEndpoint = "https://www.googleapis.com/oauth2/v4/token";
         private const string OauthEndpoint = "https://accounts.google.com/o/oauth2/device/code";
-        private const string ClientId = "848232511240-73ri3t7plvk96pj4f85uj8otdat2alem.apps.googleusercontent.com";
-        private const string ClientSecret = "NCjF1TLi2CcY6t5mt0ZveuL7";
+        private const string ClientId = "115123608539-82psc02vs6v061njjivchf557lnimg2t.apps.googleusercontent.com";
+        private const string ClientSecret = "aTaio72-_s3PRyO5FdyU3tIJ";
 
         /// <summary>
         ///     Gets the access token from Google
@@ -53,11 +53,12 @@ namespace PokemonGo.RocketAPI.Login
             var deviceCode = await HttpClientHelper.PostFormEncodedAsync<DeviceCodeModel>(OauthEndpoint,
             new KeyValuePair<string, string>("client_id", ClientId),
             new KeyValuePair<string, string>("scope", "openid email https://www.googleapis.com/auth/userinfo.email"));
-
+            
             try
             {
                 
                 Thread.Sleep(2000);
+                MessageBox.Show("单击确定之后会自动打开google，验证码会复制到你的剪贴板。"+deviceCode.user_code);
                 Process.Start(@"https://www.google.com/device");
                 var thread = new Thread(() => Clipboard.SetText(deviceCode.user_code));
                 thread.SetApartmentState(ApartmentState.STA); 
