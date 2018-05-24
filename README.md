@@ -1,4 +1,2 @@
 # PokemonsStatus
-Detail your pokemons status without client consist of calculating accurate perfections
-
-* PTC / Google  account supported
+Api被封锁，该项目已失效。
